@@ -1,0 +1,37 @@
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid;
+}
+
+.card-icon {
+  font-size: 28px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.card-label {
+  font-size: 13px;
+  color: #64748b;
+}

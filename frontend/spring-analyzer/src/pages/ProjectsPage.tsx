@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FileUpload } from '../components/upload';
 import { ProjectCard } from '../components/project';
 import { Button } from '../components';
@@ -6,6 +7,7 @@ import { useProjects } from '../hooks/useProjects';
 import './ProjectsPage.css';
 
 export function ProjectsPage() {
+  const navigate = useNavigate();
   const { projects, loading, error, fetchProjects, uploadProject, deleteProject } = useProjects();
   const [showUpload, setShowUpload] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -102,6 +104,7 @@ export function ProjectsPage() {
               key={project.id}
               project={project}
               onDelete={deleteProject}
+              onClick={(id) => navigate(`/projects/${id}/analysis`)}
             />
           ))}
         </div>

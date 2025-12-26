@@ -4,7 +4,6 @@ import com.springanalyzer.dto.response.ApiResponse;
 import com.springanalyzer.dto.ProjectRequest;
 import com.springanalyzer.dto.ProjectResponse;
 import com.springanalyzer.service.ProjectService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

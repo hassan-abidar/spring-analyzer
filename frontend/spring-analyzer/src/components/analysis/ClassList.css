@@ -1,0 +1,73 @@
+.class-list h3 {
+  margin: 0 0 16px 0;
+  color: #1e293b;
+}
+
+.class-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+.class-item {
+  background: white;
+  border-radius: 8px;
+  padding: 14px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.class-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.class-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 15px;
+}
+
+.class-type {
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+}
+
+.class-package {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+  word-break: break-all;
+}
+
+.class-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.class-annotations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.annotation {
+  font-size: 11px;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.more {
+  font-size: 11px;
+  color: #94a3b8;
+}
