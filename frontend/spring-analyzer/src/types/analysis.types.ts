@@ -6,6 +6,7 @@ export interface AnalysisResult {
   classes: ClassInfo[];
   endpoints: EndpointInfo[];
   dependencies: DependencyInfo[];
+  relationships: RelationshipInfo[];
 }
 
 export interface AnalysisSummary {
@@ -16,8 +17,18 @@ export interface AnalysisSummary {
   entities: number;
   endpoints: number;
   dependencies: number;
+  relationships: number;
   classTypeBreakdown: Record<string, number>;
   httpMethodBreakdown: Record<string, number>;
+  relationshipBreakdown: Record<string, number>;
+}
+
+export interface RelationshipInfo {
+  id: number;
+  sourceClass: string;
+  targetClass: string;
+  type: string;
+  fieldName?: string;
 }
 
 export interface ClassInfo {

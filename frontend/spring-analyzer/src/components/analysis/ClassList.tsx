@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ClassInfo } from '../../types/analysis.types';
 import './ClassList.css';
 
@@ -6,6 +7,19 @@ interface ClassListProps {
 }
 
 export function ClassList({ classes }: ClassListProps) {
+  const [search, setSearch] = useState('');
+  const [typeFilter, setTypeFilter] = useState('ALL');
+
+  const types = ['ALL', ...Array.from(new Set(classes.map(c => c.type)))];
+
+  const filtered = classes.filter(cls => {
+    const matchesSearch = search === '' || 
+      cls.name.toLowerCase().includes(search.toLowerCase()) ||
+      cls.packageName.toLowerCase().includes(search.toLowerCase());
+    const matchesType = typeFilter === 'ALL' || cls.type === typeFilter;
+    return matchesSearch && matchesType;
+  });
+
   const getTypeColor = (type: string) => {
     const colors: Record<string, string> = {
       REST_CONTROLLER: '#8b5cf6',
@@ -24,9 +38,23 @@ export function ClassList({ classes }: ClassListProps) {
 
   return (
     <div className="class-list">
-      <h3>Classes ({classes.length})</h3>
+      <div className="list-header">
+        <h3>Classes ({filtered.length}/{classes.length})</h3>
+        <div className="filters">
+          <input
+            type="text"
+            placeholder="Search classes..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="search-input"
+          />
+          <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="type-filter">
+            {types.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+      </div>
       <div className="class-grid">
-        {classes.map((cls) => (
+        {filtered.map((cls) => (
           <div key={cls.id} className="class-item">
             <div className="class-header">
               <span className="class-name">{cls.name}</span>

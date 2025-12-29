@@ -23,7 +23,8 @@ public class JavaParserService {
     private static final Pattern FIELD_PATTERN = Pattern.compile("(private|protected|public)\\s+(?!class|interface|enum)\\w+(?:<[^>]+>)?\\s+\\w+\\s*[;=]");
     private static final Pattern METHOD_PATTERN = Pattern.compile("(public|private|protected)\\s+(?!class)\\w+(?:<[^>]+>)?\\s+\\w+\\s*\\([^)]*\\)\\s*\\{?");
     
-    private static final Pattern REQUEST_MAPPING_PATTERN = Pattern.compile("@(Get|Post|Put|Delete|Patch|Request)Mapping\\s*(?:\\(\\s*(?:value\\s*=\\s*)?[\"']?([^\"')]*)[\"']?)?");
+    private static final Pattern REQUEST_MAPPING_PATTERN = Pattern.compile("@(Get|Post|Put|Delete|Patch|Request)Mapping\\s*(?:\\(\\s*(?:value\\s*=\\s*)?\"([^\"]*)\"|\\(\\s*(?:value\\s*=\\s*)?'([^']*)'|\\(\\s*\"([^\"]*)\"|\\))?");
+    private static final Pattern SIMPLE_MAPPING_PATTERN = Pattern.compile("@(Get|Post|Put|Delete|Patch)Mapping(?:\\s*\\(\\s*[\"']([^\"']*)[\"']\\s*\\))?");
     private static final Pattern METHOD_SIGNATURE_PATTERN = Pattern.compile("(public|private|protected)\\s+(\\w+(?:<[^>]+>)?)\\s+(\\w+)\\s*\\(([^)]*)\\)");
 
     public ParsedClass parseJavaFile(Path file) {
@@ -125,12 +126,14 @@ public class JavaParserService {
         String[] lines = content.split("\n");
         for (int i = 0; i < lines.length; i++) {
             String line = lines[i].trim();
-            Matcher mappingMatcher = REQUEST_MAPPING_PATTERN.matcher(line);
+            Matcher mappingMatcher = SIMPLE_MAPPING_PATTERN.matcher(line);
             
             if (mappingMatcher.find()) {
                 String mappingType = mappingMatcher.group(1);
                 String path = mappingMatcher.group(2);
-                if (path == null) path = "";
+                if (path == null || path.isEmpty()) path = "";
+                
+                if (path.length() > 200) continue;
                 
                 HttpMethod httpMethod = switch (mappingType) {
                     case "Get" -> HttpMethod.GET;

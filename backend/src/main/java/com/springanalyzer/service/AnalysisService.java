@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,10 +23,12 @@ public class AnalysisService {
     private final AnalyzedClassRepository classRepository;
     private final EndpointRepository endpointRepository;
     private final DependencyRepository dependencyRepository;
+    private final ClassRelationshipRepository relationshipRepository;
     private final FileStorageService fileStorageService;
     private final ZipExtractionService zipExtractionService;
     private final JavaParserService javaParserService;
     private final PomParserService pomParserService;
+    private final RelationshipService relationshipService;
 
     @Async
     public void analyzeProjectAsync(Long projectId) {
@@ -53,9 +57,16 @@ public class AnalysisService {
             List<Path> javaFiles = zipExtractionService.findJavaFiles(extractedPath);
             log.info("Found {} Java files in project {}", javaFiles.size(), project.getName());
 
+            Map<String, AnalyzedClass> classMap = new HashMap<>();
             for (Path javaFile : javaFiles) {
-                processJavaFile(javaFile, project);
+                AnalyzedClass saved = processJavaFile(javaFile, project);
+                if (saved != null) {
+                    classMap.put(saved.getName(), saved);
+                }
             }
+
+            relationshipService.analyzeRelationships(project, javaFiles, classMap);
+            log.info("Analyzed relationships for {} classes", classMap.size());
 
             Path pomFile = zipExtractionService.findPomFile(extractedPath);
             if (pomFile != null) {
@@ -81,9 +92,9 @@ public class AnalysisService {
         }
     }
 
-    private void processJavaFile(Path file, Project project) {
+    private AnalyzedClass processJavaFile(Path file, Project project) {
         JavaParserService.ParsedClass parsed = javaParserService.parseJavaFile(file);
-        if (parsed == null || parsed.getName() == null) return;
+        if (parsed == null || parsed.getName() == null) return null;
 
         AnalyzedClass analyzedClass = AnalyzedClass.builder()
                 .project(project)
@@ -112,10 +123,12 @@ public class AnalysisService {
                     .build();
             endpointRepository.save(endpoint);
         }
+        return saved;
     }
 
     @Transactional
     public void clearPreviousAnalysis(Long projectId) {
+        relationshipRepository.deleteByProjectId(projectId);
         endpointRepository.deleteByProjectId(projectId);
         classRepository.deleteByProjectId(projectId);
         dependencyRepository.deleteByProjectId(projectId);

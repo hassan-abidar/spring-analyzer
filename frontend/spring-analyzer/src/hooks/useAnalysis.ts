@@ -37,6 +37,22 @@ export function useAnalysis() {
     }
   }, []);
 
+  const exportJson = useCallback(async (projectId: number, projectName: string) => {
+    try {
+      await analysisService.exportJson(projectId, projectName);
+    } catch (err: any) {
+      setError('Export failed');
+    }
+  }, []);
+
+  const exportMarkdown = useCallback(async (projectId: number, projectName: string) => {
+    try {
+      await analysisService.exportMarkdown(projectId, projectName);
+    } catch (err: any) {
+      setError('Export failed');
+    }
+  }, []);
+
   const clearResult = useCallback(() => {
     setResult(null);
     setError(null);
@@ -48,6 +64,8 @@ export function useAnalysis() {
     error,
     analyze,
     fetchResult,
+    exportJson,
+    exportMarkdown,
     clearResult
   };
 }

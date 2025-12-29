@@ -14,6 +14,7 @@ export function SummaryCards({ summary }: SummaryCardsProps) {
     { label: 'Entities', value: summary.entities, icon: '📋', color: '#ef4444' },
     { label: 'Endpoints', value: summary.endpoints, icon: '🔗', color: '#06b6d4' },
     { label: 'Dependencies', value: summary.dependencies, icon: '📚', color: '#ec4899' },
+    { label: 'Relationships', value: summary.relationships || 0, icon: '🔀', color: '#14b8a6' },
   ];
 
   return (

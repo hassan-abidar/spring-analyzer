@@ -3,13 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAnalysis } from '../hooks/useAnalysis';
 import { Button } from '../components';
 import { SummaryCards, ClassList, EndpointList, DependencyList } from '../components/analysis';
+import RelationshipList from '../components/analysis/RelationshipList';
+import { ClassDiagram } from '../components/analysis/ClassDiagram';
 import './AnalysisPage.css';
+
+type TabType = 'classes' | 'endpoints' | 'dependencies' | 'relationships' | 'diagram';
 
 export function AnalysisPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { result, loading, error, analyze, fetchResult } = useAnalysis();
-  const [activeTab, setActiveTab] = useState<'classes' | 'endpoints' | 'dependencies'>('classes');
+  const { result, loading, error, analyze, fetchResult, exportJson, exportMarkdown } = useAnalysis();
+  const [activeTab, setActiveTab] = useState<TabType>('classes');
 
   const projectId = Number(id);
 
@@ -22,6 +26,18 @@ export function AnalysisPage() {
   const handleAnalyze = async () => {
     if (projectId) {
       await analyze(projectId);
+    }
+  };
+
+  const handleExportJson = () => {
+    if (projectId && result) {
+      exportJson(projectId, result.projectName);
+    }
+  };
+
+  const handleExportMarkdown = () => {
+    if (projectId && result) {
+      exportMarkdown(projectId, result.projectName);
     }
   };
 
@@ -44,9 +60,17 @@ export function AnalysisPage() {
           <h1>{result?.projectName || 'Project Analysis'}</h1>
           {result && <span className={`status status-${result.status.toLowerCase()}`}>{result.status}</span>}
         </div>
-        <Button onClick={handleAnalyze} disabled={loading}>
-          {loading ? 'Analyzing...' : result?.status === 'COMPLETED' ? 'Re-analyze' : 'Start Analysis'}
-        </Button>
+        <div className="header-actions">
+          {result?.status === 'COMPLETED' && (
+            <div className="export-buttons">
+              <button className="export-btn" onClick={handleExportJson}>Export JSON</button>
+              <button className="export-btn" onClick={handleExportMarkdown}>Export MD</button>
+            </div>
+          )}
+          <Button onClick={handleAnalyze} disabled={loading}>
+            {loading ? 'Analyzing...' : result?.status === 'COMPLETED' ? 'Re-analyze' : 'Start Analysis'}
+          </Button>
+        </div>
       </div>
 
       {error && <div className="error-message">{error}</div>}
@@ -74,12 +98,26 @@ export function AnalysisPage() {
             >
               Dependencies ({result.dependencies.length})
             </button>
+            <button 
+              className={`tab ${activeTab === 'relationships' ? 'active' : ''}`}
+              onClick={() => setActiveTab('relationships')}
+            >
+              Relationships ({result.relationships?.length || 0})
+            </button>
+            <button 
+              className={`tab ${activeTab === 'diagram' ? 'active' : ''}`}
+              onClick={() => setActiveTab('diagram')}
+            >
+              Diagram
+            </button>
           </div>
 
           <div className="tab-content">
             {activeTab === 'classes' && <ClassList classes={result.classes} />}
             {activeTab === 'endpoints' && <EndpointList endpoints={result.endpoints} />}
             {activeTab === 'dependencies' && <DependencyList dependencies={result.dependencies} />}
+            {activeTab === 'relationships' && <RelationshipList relationships={result.relationships || []} />}
+            {activeTab === 'diagram' && <ClassDiagram classes={result.classes} relationships={result.relationships || []} />}
           </div>
         </>
       )}

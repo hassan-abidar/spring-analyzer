@@ -7,12 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @Entity
-@Table(name = "endpoints")
+@Table(name = "class_relationships")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Endpoint {
+public class ClassRelationship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,22 +23,16 @@ public class Endpoint {
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id")
-    private AnalyzedClass analyzedClass;
+    @JoinColumn(name = "source_class_id", nullable = false)
+    private AnalyzedClass sourceClass;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "target_class_id", nullable = false)
+    private AnalyzedClass targetClass;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private HttpMethod httpMethod;
+    private RelationshipType type;
 
-    @Column(nullable = false, length = 500)
-    private String path;
-
-    @Column(name = "method_name")
-    private String methodName;
-
-    @Column(name = "return_type")
-    private String returnType;
-
-    @Column(columnDefinition = "TEXT")
-    private String parameters;
+    private String fieldName;
 }

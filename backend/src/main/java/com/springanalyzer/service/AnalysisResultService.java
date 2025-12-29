@@ -19,6 +19,7 @@ public class AnalysisResultService {
     private final AnalyzedClassRepository classRepository;
     private final EndpointRepository endpointRepository;
     private final DependencyRepository dependencyRepository;
+    private final ClassRelationshipRepository relationshipRepository;
 
     public AnalysisResponse getAnalysisResult(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -27,24 +28,29 @@ public class AnalysisResultService {
         List<AnalyzedClass> classes = classRepository.findByProjectId(projectId);
         List<Endpoint> endpoints = endpointRepository.findByProjectId(projectId);
         List<Dependency> dependencies = dependencyRepository.findByProjectId(projectId);
+        List<ClassRelationship> relationships = relationshipRepository.findByProject_Id(projectId);
 
         return AnalysisResponse.builder()
                 .projectId(project.getId())
                 .projectName(project.getName())
                 .status(project.getStatus().name())
-                .summary(buildSummary(classes, endpoints, dependencies))
+                .summary(buildSummary(classes, endpoints, dependencies, relationships))
                 .classes(classes.stream().map(this::toClassInfo).toList())
                 .endpoints(endpoints.stream().map(this::toEndpointInfo).toList())
                 .dependencies(dependencies.stream().map(this::toDependencyInfo).toList())
+                .relationships(relationships.stream().map(this::toRelationshipInfo).toList())
                 .build();
     }
 
-    private AnalysisSummary buildSummary(List<AnalyzedClass> classes, List<Endpoint> endpoints, List<Dependency> dependencies) {
+    private AnalysisSummary buildSummary(List<AnalyzedClass> classes, List<Endpoint> endpoints, List<Dependency> dependencies, List<ClassRelationship> relationships) {
         Map<String, Long> classTypeBreakdown = classes.stream()
                 .collect(Collectors.groupingBy(c -> c.getType().name(), Collectors.counting()));
 
         Map<String, Long> httpMethodBreakdown = endpoints.stream()
                 .collect(Collectors.groupingBy(e -> e.getHttpMethod().name(), Collectors.counting()));
+
+        Map<String, Long> relationshipTypeBreakdown = relationships.stream()
+                .collect(Collectors.groupingBy(r -> r.getType().name(), Collectors.counting()));
 
         return AnalysisSummary.builder()
                 .totalClasses(classes.size())
@@ -54,8 +60,10 @@ public class AnalysisResultService {
                 .entities(countByType(classes, ClassType.ENTITY))
                 .endpoints(endpoints.size())
                 .dependencies(dependencies.size())
+                .relationships(relationships.size())
                 .classTypeBreakdown(classTypeBreakdown)
                 .httpMethodBreakdown(httpMethodBreakdown)
+                .relationshipTypeBreakdown(relationshipTypeBreakdown)
                 .build();
     }
 
@@ -95,6 +103,16 @@ public class AnalysisResultService {
                 .artifactId(d.getArtifactId())
                 .version(d.getVersion())
                 .scope(d.getScope())
+                .build();
+    }
+
+    private RelationshipInfo toRelationshipInfo(ClassRelationship r) {
+        return RelationshipInfo.builder()
+                .id(r.getId())
+                .sourceClass(r.getSourceClass().getName())
+                .targetClass(r.getTargetClass().getName())
+                .type(r.getType().name())
+                .fieldName(r.getFieldName())
                 .build();
     }
 }

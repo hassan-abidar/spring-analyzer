@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { EndpointInfo } from '../../types/analysis.types';
 import './EndpointList.css';
 
@@ -6,6 +7,20 @@ interface EndpointListProps {
 }
 
 export function EndpointList({ endpoints }: EndpointListProps) {
+  const [search, setSearch] = useState('');
+  const [methodFilter, setMethodFilter] = useState('ALL');
+
+  const methods = ['ALL', ...Array.from(new Set(endpoints.map(e => e.httpMethod)))];
+
+  const filtered = endpoints.filter(ep => {
+    const matchesSearch = search === '' || 
+      ep.path.toLowerCase().includes(search.toLowerCase()) ||
+      ep.methodName.toLowerCase().includes(search.toLowerCase()) ||
+      (ep.className?.toLowerCase().includes(search.toLowerCase()) ?? false);
+    const matchesMethod = methodFilter === 'ALL' || ep.httpMethod === methodFilter;
+    return matchesSearch && matchesMethod;
+  });
+
   const getMethodColor = (method: string) => {
     const colors: Record<string, string> = {
       GET: '#10b981',
@@ -19,7 +34,21 @@ export function EndpointList({ endpoints }: EndpointListProps) {
 
   return (
     <div className="endpoint-list">
-      <h3>Endpoints ({endpoints.length})</h3>
+      <div className="list-header">
+        <h3>Endpoints ({filtered.length}/{endpoints.length})</h3>
+        <div className="filters">
+          <input
+            type="text"
+            placeholder="Search endpoints..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="search-input"
+          />
+          <select value={methodFilter} onChange={e => setMethodFilter(e.target.value)} className="method-filter">
+            {methods.map(m => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+      </div>
       <div className="endpoint-table">
         <div className="endpoint-header">
           <span>Method</span>
@@ -27,7 +56,7 @@ export function EndpointList({ endpoints }: EndpointListProps) {
           <span>Handler</span>
           <span>Return</span>
         </div>
-        {endpoints.map((ep) => (
+        {filtered.map((ep) => (
           <div key={ep.id} className="endpoint-row">
             <span className="http-method" style={{ background: getMethodColor(ep.httpMethod) }}>
               {ep.httpMethod}

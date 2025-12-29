@@ -15,6 +15,7 @@ public class AnalysisResponse {
     private List<ClassInfo> classes;
     private List<EndpointInfo> endpoints;
     private List<DependencyInfo> dependencies;
+    private List<RelationshipInfo> relationships;
 
     @Data
     @Builder
@@ -26,8 +27,10 @@ public class AnalysisResponse {
         private long entities;
         private long endpoints;
         private long dependencies;
+        private long relationships;
         private Map<String, Long> classTypeBreakdown;
         private Map<String, Long> httpMethodBreakdown;
+        private Map<String, Long> relationshipTypeBreakdown;
     }
 
     @Data
@@ -63,5 +66,15 @@ public class AnalysisResponse {
         private String artifactId;
         private String version;
         private String scope;
+    }
+
+    @Data
+    @Builder
+    public static class RelationshipInfo {
+        private Long id;
+        private String sourceClass;
+        private String targetClass;
+        private String type;
+        private String fieldName;
     }
 }
