@@ -24,11 +24,15 @@ public class AnalysisService {
     private final EndpointRepository endpointRepository;
     private final DependencyRepository dependencyRepository;
     private final ClassRelationshipRepository relationshipRepository;
+    private final SecurityIssueRepository securityIssueRepository;
+    private final CodeMetricsRepository codeMetricsRepository;
     private final FileStorageService fileStorageService;
     private final ZipExtractionService zipExtractionService;
     private final JavaParserService javaParserService;
     private final PomParserService pomParserService;
     private final RelationshipService relationshipService;
+    private final SecurityScannerService securityScannerService;
+    private final MetricsService metricsService;
 
     @Async
     public void analyzeProjectAsync(Long projectId) {
@@ -67,6 +71,12 @@ public class AnalysisService {
 
             relationshipService.analyzeRelationships(project, javaFiles, classMap);
             log.info("Analyzed relationships for {} classes", classMap.size());
+
+            List<SecurityIssue> issues = securityScannerService.scanProject(project, extractedPath, classMap);
+            log.info("Found {} security issues", issues.size());
+
+            metricsService.calculateMetrics(project, extractedPath);
+            log.info("Calculated code metrics");
 
             Path pomFile = zipExtractionService.findPomFile(extractedPath);
             if (pomFile != null) {
@@ -128,6 +138,8 @@ public class AnalysisService {
 
     @Transactional
     public void clearPreviousAnalysis(Long projectId) {
+        securityIssueRepository.deleteByProjectId(projectId);
+        codeMetricsRepository.deleteByProjectId(projectId);
         relationshipRepository.deleteByProjectId(projectId);
         endpointRepository.deleteByProjectId(projectId);
         classRepository.deleteByProjectId(projectId);

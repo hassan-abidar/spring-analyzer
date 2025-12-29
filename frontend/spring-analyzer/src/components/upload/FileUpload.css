@@ -3,23 +3,24 @@
 }
 
 .file-upload-zone {
-  border: 2px dashed #cbd5e1;
-  border-radius: 12px;
-  padding: 40px 20px;
+  border: 2px dashed rgba(99, 102, 241, 0.3);
+  border-radius: 16px;
+  padding: 48px 24px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: #f8fafc;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.02) 0%, rgba(139, 92, 246, 0.02) 100%);
 }
 
 .file-upload-zone:hover {
-  border-color: #3b82f6;
-  background: #eff6ff;
+  border-color: rgba(99, 102, 241, 0.5);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
 }
 
 .file-upload-zone.dragging {
-  border-color: #3b82f6;
-  background: #dbeafe;
+  border-color: #6366f1;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  transform: scale(1.01);
 }
 
 .file-upload-zone.disabled {
@@ -28,19 +29,20 @@
 }
 
 .upload-icon {
-  font-size: 48px;
+  color: #6366f1;
   margin-bottom: 16px;
+  opacity: 0.8;
 }
 
 .upload-text .upload-primary {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: #1e293b;
   margin: 0 0 4px 0;
 }
 
 .upload-text .upload-secondary {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748b;
   margin: 0;
 }
@@ -52,20 +54,26 @@
 }
 
 .selected-file .file-name {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   color: #1e293b;
   word-break: break-all;
 }
 
 .selected-file .file-size {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748b;
 }
 
 .upload-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   color: #dc2626;
-  font-size: 14px;
-  margin-top: 8px;
-  text-align: center;
+  font-size: 13px;
+  margin-top: 12px;
+  background: rgba(239, 68, 68, 0.08);
+  padding: 8px 14px;
+  border-radius: 8px;
 }

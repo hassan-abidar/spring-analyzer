@@ -1,6 +1,7 @@
 .projects-page {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 24px;
 }
 
 .projects-header {
@@ -12,21 +13,24 @@
 
 .projects-header h1 {
   margin: 0 0 4px 0;
-  font-size: 28px;
-  color: #1e293b;
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.5px;
 }
 
 .projects-header p {
   margin: 0;
   color: #64748b;
+  font-size: 14px;
 }
 
 .upload-section {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
   margin-bottom: 32px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 .upload-form {
@@ -38,19 +42,22 @@
 
 .form-input {
   padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
   font-size: 14px;
-  transition: border-color 0.2s;
+  transition: all 0.15s ease;
+  background: #f8fafc;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #3b82f6;
+  border-color: #6366f1;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .form-input:disabled {
-  background: #f8fafc;
+  background: #f1f5f9;
   cursor: not-allowed;
 }
 
@@ -62,42 +69,65 @@ textarea.form-input {
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 20px;
+  gap: 16px;
 }
 
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
+  padding: 64px 20px;
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
+.empty-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
 }
 
 .empty-state h3 {
   margin: 0 0 8px 0;
   color: #1e293b;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .empty-state p {
   margin: 0;
   color: #64748b;
+  font-size: 14px;
 }
 
 .loading {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   padding: 40px;
   color: #64748b;
+  font-size: 14px;
+}
+
+.loading .spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .error-message {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: rgba(239, 68, 68, 0.08);
+  color: #dc2626;
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 20px;
+  font-size: 14px;
 }

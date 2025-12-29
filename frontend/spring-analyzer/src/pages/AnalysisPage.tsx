@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Search, XCircle, Loader2 } from 'lucide-react';
 import { useAnalysis } from '../hooks/useAnalysis';
 import { Button } from '../components';
 import { SummaryCards, ClassList, EndpointList, DependencyList } from '../components/analysis';
@@ -45,7 +46,7 @@ export function AnalysisPage() {
     return (
       <div className="analysis-page">
         <div className="loading-state">
-          <div className="spinner"></div>
+          <Loader2 size={32} className="spin" />
           <p>Analyzing project...</p>
         </div>
       </div>
@@ -56,7 +57,10 @@ export function AnalysisPage() {
     <div className="analysis-page">
       <div className="analysis-header">
         <div>
-          <button className="back-btn" onClick={() => navigate('/projects')}>← Back</button>
+          <button className="back-btn" onClick={() => navigate('/projects')}>
+            <ArrowLeft size={16} />
+            Back
+          </button>
           <h1>{result?.projectName || 'Project Analysis'}</h1>
           {result && <span className={`status status-${result.status.toLowerCase()}`}>{result.status}</span>}
         </div>
@@ -124,7 +128,9 @@ export function AnalysisPage() {
 
       {result?.status === 'UPLOADED' && (
         <div className="empty-state">
-          <div className="empty-icon">🔍</div>
+          <div className="empty-icon-wrapper">
+            <Search size={32} />
+          </div>
           <h3>Ready to Analyze</h3>
           <p>Click the button above to start analyzing this project</p>
         </div>
@@ -132,7 +138,9 @@ export function AnalysisPage() {
 
       {result?.status === 'FAILED' && (
         <div className="error-state">
-          <div className="error-icon">❌</div>
+          <div className="error-icon-wrapper">
+            <XCircle size={32} />
+          </div>
           <h3>Analysis Failed</h3>
           <p>Something went wrong. Please try again.</p>
         </div>

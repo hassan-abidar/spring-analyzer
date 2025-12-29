@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Plus, X, FolderOpen, Loader2 } from 'lucide-react';
 import { FileUpload } from '../components/upload';
 import { ProjectCard } from '../components/project';
 import { Button } from '../components';
@@ -52,7 +53,7 @@ export function ProjectsPage() {
           <p>Upload and analyze your Spring Boot projects</p>
         </div>
         <Button onClick={() => setShowUpload(!showUpload)}>
-          {showUpload ? 'Cancel' : '+ New Project'}
+          {showUpload ? <><X size={16} /> Cancel</> : <><Plus size={16} /> New Project</>}
         </Button>
       </div>
 
@@ -90,10 +91,15 @@ export function ProjectsPage() {
       {error && <div className="error-message">{error}</div>}
 
       {loading && !uploading ? (
-        <div className="loading">Loading projects...</div>
+        <div className="loading">
+          <Loader2 size={24} className="spin" />
+          Loading projects...
+        </div>
       ) : projects.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-icon">📂</div>
+          <div className="empty-icon-wrapper">
+            <FolderOpen size={32} />
+          </div>
           <h3>No projects yet</h3>
           <p>Upload your first Spring Boot project to get started</p>
         </div>

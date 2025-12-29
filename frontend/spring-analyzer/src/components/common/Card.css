@@ -1,18 +1,25 @@
 .card {
   background-color: var(--surface-color);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: 16px;
   padding: 24px;
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .card-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   color: var(--text-primary);
+  letter-spacing: -0.3px;
 }
 
 .card-content {
   color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
 }

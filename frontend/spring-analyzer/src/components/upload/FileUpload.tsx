@@ -1,4 +1,5 @@
 import React, { useState, useRef, DragEvent } from 'react';
+import { Upload, FileArchive, AlertCircle } from 'lucide-react';
 import './FileUpload.css';
 
 interface FileUploadProps {
@@ -92,7 +93,9 @@ export function FileUpload({
           hidden
         />
         
-        <div className="upload-icon">📁</div>
+        <div className="upload-icon">
+          {selectedFile ? <FileArchive size={40} /> : <Upload size={40} />}
+        </div>
         
         {selectedFile ? (
           <div className="selected-file">
@@ -107,7 +110,12 @@ export function FileUpload({
         )}
       </div>
       
-      {error && <p className="upload-error">{error}</p>}
+      {error && (
+        <p className="upload-error">
+          <AlertCircle size={14} />
+          {error}
+        </p>
+      )}
     </div>
   );
 }

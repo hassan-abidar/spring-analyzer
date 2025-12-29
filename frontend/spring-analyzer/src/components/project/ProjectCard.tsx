@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FileText, HardDrive, BarChart3, Trash2 } from 'lucide-react';
 import { Project } from '../../types/project.types';
 import './ProjectCard.css';
 
@@ -9,6 +11,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, onDelete, onClick }: ProjectCardProps) {
+  const navigate = useNavigate();
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -55,17 +58,34 @@ export function ProjectCard({ project, onDelete, onClick }: ProjectCardProps) {
       )}
       
       <div className="project-meta">
-        <span className="meta-item">📄 {project.originalFilename}</span>
-        <span className="meta-item">💾 {formatSize(project.fileSize)}</span>
+        <span className="meta-item">
+          <FileText size={14} />
+          {project.originalFilename}
+        </span>
+        <span className="meta-item">
+          <HardDrive size={14} />
+          {formatSize(project.fileSize)}
+        </span>
       </div>
       
       <div className="project-card-footer">
         <span className="project-date">{formatDate(project.createdAt)}</span>
-        {onDelete && (
-          <button className="delete-btn" onClick={handleDelete}>
-            🗑️ Delete
-          </button>
-        )}
+        <div className="footer-actions">
+          {project.status === 'COMPLETED' && (
+            <button 
+              className="dashboard-btn" 
+              onClick={(e) => { e.stopPropagation(); navigate(`/projects/${project.id}/dashboard`); }}
+            >
+              <BarChart3 size={15} />
+              Dashboard
+            </button>
+          )}
+          {onDelete && (
+            <button className="delete-btn" onClick={handleDelete}>
+              <Trash2 size={15} />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

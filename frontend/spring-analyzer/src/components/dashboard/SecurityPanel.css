@@ -1,0 +1,160 @@
+.security-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.security-header h3 {
+  margin: 0;
+}
+
+.security-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid;
+  background: white;
+}
+
+.score-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.score-label {
+  font-size: 10px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.severity-grid {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.severity-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.severity-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 0 8px;
+}
+
+.severity-name {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.issues-list h4 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.issue-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  background: #f8fafc;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: background 0.15s ease;
+}
+
+.issue-item:hover {
+  background: #f1f5f9;
+}
+
+.issue-severity {
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  height: fit-content;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.issue-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.issue-title {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 13px;
+}
+
+.issue-location {
+  font-size: 11px;
+  color: #64748b;
+  font-family: 'SF Mono', Monaco, monospace;
+}
+
+.issue-recommendation {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #059669;
+}
+
+.no-issues {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+}
+
+.no-issues .check-icon {
+  width: 56px;
+  height: 56px;
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.no-issues p {
+  margin: 0;
+  color: #10b981;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.check-icon {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.no-issues p {
+  margin: 0;
+  font-weight: 500;
+}

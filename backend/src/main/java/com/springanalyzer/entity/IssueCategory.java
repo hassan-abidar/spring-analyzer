@@ -1,0 +1,14 @@
+package com.springanalyzer.entity;
+
+public enum IssueCategory {
+    HARDCODED_SECRET,
+    SQL_INJECTION,
+    MISSING_AUTH,
+    INSECURE_ENDPOINT,
+    SENSITIVE_DATA_EXPOSURE,
+    WEAK_CRYPTO,
+    CORS_MISCONFIGURATION,
+    DEBUG_ENABLED,
+    DEPENDENCY_VULNERABILITY,
+    OTHER
+}

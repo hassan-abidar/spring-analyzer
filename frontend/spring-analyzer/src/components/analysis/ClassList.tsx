@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Layers, Wrench, Search } from 'lucide-react';
 import { ClassInfo } from '../../types/analysis.types';
 import './ClassList.css';
 
@@ -41,13 +42,16 @@ export function ClassList({ classes }: ClassListProps) {
       <div className="list-header">
         <h3>Classes ({filtered.length}/{classes.length})</h3>
         <div className="filters">
-          <input
-            type="text"
-            placeholder="Search classes..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="search-input"
-          />
+          <div className="search-wrapper">
+            <Search size={16} />
+            <input
+              type="text"
+              placeholder="Search classes..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="search-input"
+            />
+          </div>
           <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} className="type-filter">
             {types.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
@@ -64,8 +68,8 @@ export function ClassList({ classes }: ClassListProps) {
             </div>
             <div className="class-package">{cls.packageName}</div>
             <div className="class-stats">
-              <span>📊 {cls.fieldCount} fields</span>
-              <span>🔧 {cls.methodCount} methods</span>
+              <span><Layers size={13} /> {cls.fieldCount} fields</span>
+              <span><Wrench size={13} /> {cls.methodCount} methods</span>
             </div>
             {cls.annotations.length > 0 && cls.annotations[0] && (
               <div className="class-annotations">
