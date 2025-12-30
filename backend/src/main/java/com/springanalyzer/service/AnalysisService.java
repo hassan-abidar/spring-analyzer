@@ -33,6 +33,7 @@ public class AnalysisService {
     private final RelationshipService relationshipService;
     private final SecurityScannerService securityScannerService;
     private final MetricsService metricsService;
+    private final MicroserviceAnalyzerService microserviceAnalyzerService;
 
     @Async
     public void analyzeProjectAsync(Long projectId) {
@@ -77,6 +78,10 @@ public class AnalysisService {
 
             metricsService.calculateMetrics(project, extractedPath);
             log.info("Calculated code metrics");
+
+            // Analyze microservices architecture
+            microserviceAnalyzerService.analyzeProject(project, extractedPath);
+            log.info("Analyzed microservices architecture");
 
             Path pomFile = zipExtractionService.findPomFile(extractedPath);
             if (pomFile != null) {
