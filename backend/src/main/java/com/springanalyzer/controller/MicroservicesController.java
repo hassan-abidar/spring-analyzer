@@ -64,10 +64,25 @@ public class MicroservicesController {
                 .anyMatch(s -> s.getServiceType() == ServiceType.CONFIG_SERVER ||
                         Boolean.TRUE.equals(s.getHasConfigClient()));
 
+        boolean hasLoadBalancing = microservices.stream()
+                .anyMatch(s -> Boolean.TRUE.equals(s.getHasLoadBalancer()));
+        
+        boolean hasCircuitBreaker = microservices.stream()
+                .anyMatch(s -> Boolean.TRUE.equals(s.getHasCircuitBreaker()));
+
         Set<String> messagingTechs = new HashSet<>();
+        Set<String> commMethods = new HashSet<>();
+        String eurekaUrl = null;
+        
         for (Microservice ms : microservices) {
             if (ms.getMessagingType() != null && !ms.getMessagingType().isEmpty()) {
                 messagingTechs.addAll(Arrays.asList(ms.getMessagingType().split(",")));
+            }
+            if (ms.getCommunicationMethods() != null && !ms.getCommunicationMethods().isEmpty()) {
+                commMethods.addAll(Arrays.asList(ms.getCommunicationMethods().split(",")));
+            }
+            if (ms.getEurekaServiceUrl() != null && eurekaUrl == null) {
+                eurekaUrl = ms.getEurekaServiceUrl();
             }
         }
 
@@ -79,7 +94,11 @@ public class MicroservicesController {
                 .hasServiceDiscovery(hasServiceDiscovery)
                 .hasApiGateway(hasApiGateway)
                 .hasConfigServer(hasConfigServer)
+                .hasLoadBalancing(hasLoadBalancing)
+                .hasCircuitBreaker(hasCircuitBreaker)
                 .messagingTechnologies(new ArrayList<>(messagingTechs))
+                .communicationMethods(new ArrayList<>(commMethods))
+                .eurekaServerUrl(eurekaUrl)
                 .build();
 
         // Build service list
@@ -114,10 +133,22 @@ public class MicroservicesController {
                 .profiles(ms.getProfiles() != null && !ms.getProfiles().isEmpty() 
                         ? Arrays.asList(ms.getProfiles().split(",")) 
                         : Collections.emptyList())
+                // Service Discovery
                 .hasEurekaClient(Boolean.TRUE.equals(ms.getHasEurekaClient()))
                 .hasConfigClient(Boolean.TRUE.equals(ms.getHasConfigClient()))
                 .hasGateway(Boolean.TRUE.equals(ms.getHasGateway()))
+                .eurekaServiceUrl(ms.getEurekaServiceUrl())
+                // Communication Methods
                 .hasFeignClients(Boolean.TRUE.equals(ms.getHasFeignClients()))
+                .hasRestTemplate(Boolean.TRUE.equals(ms.getHasRestTemplate()))
+                .hasWebClient(Boolean.TRUE.equals(ms.getHasWebClient()))
+                .hasKafka(Boolean.TRUE.equals(ms.getHasKafka()))
+                .hasRabbitmq(Boolean.TRUE.equals(ms.getHasRabbitmq()))
+                .hasGrpc(Boolean.TRUE.equals(ms.getHasGrpc()))
+                // Resilience
+                .hasLoadBalancer(Boolean.TRUE.equals(ms.getHasLoadBalancer()))
+                .hasCircuitBreaker(Boolean.TRUE.equals(ms.getHasCircuitBreaker()))
+                // Stats
                 .classCount(ms.getClassCount() != null ? ms.getClassCount() : 0)
                 .endpointCount(ms.getEndpointCount() != null ? ms.getEndpointCount() : 0)
                 .dependencies(ms.getDependencies() != null && !ms.getDependencies().isEmpty()
@@ -126,9 +157,18 @@ public class MicroservicesController {
                 .messagingTypes(ms.getMessagingType() != null && !ms.getMessagingType().isEmpty()
                         ? Arrays.asList(ms.getMessagingType().split(","))
                         : Collections.emptyList())
+                .communicationMethods(ms.getCommunicationMethods() != null && !ms.getCommunicationMethods().isEmpty()
+                        ? Arrays.asList(ms.getCommunicationMethods().split(","))
+                        : Collections.emptyList())
                 .consumedServices(ms.getConsumedServices() != null && !ms.getConsumedServices().isEmpty()
                         ? Arrays.asList(ms.getConsumedServices().split(","))
                         : Collections.emptyList())
+                // Gateway
+                .gatewayRoutes(ms.getGatewayRoutes() != null && !ms.getGatewayRoutes().isEmpty()
+                        ? Arrays.asList(ms.getGatewayRoutes().split(","))
+                        : Collections.emptyList())
+                // Database
+                .databaseType(ms.getDatabaseType())
                 .build();
     }
 
@@ -146,6 +186,10 @@ public class MicroservicesController {
                 .className(comm.getClassName())
                 .methodName(comm.getMethodName())
                 .messageChannel(comm.getMessageChannel())
+                .endpointPath(comm.getEndpointPath())
+                .isLoadBalanced(Boolean.TRUE.equals(comm.getIsLoadBalanced()))
+                .isAsync(Boolean.TRUE.equals(comm.getIsAsync()))
+                .description(comm.getDescription())
                 .build();
     }
 }

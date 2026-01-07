@@ -209,3 +209,24 @@
   margin-bottom: 20px;
   font-size: 14px;
 }
+
+/* Microservices Tab Styles */
+.microservices-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.microservices-diagram-section {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.microservices-diagram-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}

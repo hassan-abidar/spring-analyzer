@@ -15,7 +15,11 @@ export interface MicroservicesSummary {
   hasServiceDiscovery: boolean;
   hasApiGateway: boolean;
   hasConfigServer: boolean;
+  hasLoadBalancing: boolean;
+  hasCircuitBreaker: boolean;
   messagingTechnologies: string[];
+  communicationMethods: string[];
+  eurekaServerUrl?: string;
 }
 
 export interface MicroserviceInfo {
@@ -27,15 +31,32 @@ export interface MicroserviceInfo {
   serverPort: string;
   serviceType: string;
   profiles: string[];
+  // Service Discovery
   hasEurekaClient: boolean;
   hasConfigClient: boolean;
   hasGateway: boolean;
+  eurekaServiceUrl?: string;
+  // Communication Methods
   hasFeignClients: boolean;
+  hasRestTemplate: boolean;
+  hasWebClient: boolean;
+  hasKafka: boolean;
+  hasRabbitmq: boolean;
+  hasGrpc: boolean;
+  // Resilience
+  hasLoadBalancer: boolean;
+  hasCircuitBreaker: boolean;
+  // Stats
   classCount: number;
   endpointCount: number;
   dependencies: string[];
   messagingTypes: string[];
+  communicationMethods: string[];
   consumedServices: string[];
+  // Gateway specific
+  gatewayRoutes: string[];
+  // Database
+  databaseType?: string;
 }
 
 export interface CommunicationInfo {
@@ -49,4 +70,8 @@ export interface CommunicationInfo {
   className: string;
   methodName?: string;
   messageChannel?: string;
+  endpointPath?: string;
+  isLoadBalanced: boolean;
+  isAsync: boolean;
+  description?: string;
 }

@@ -49,4 +49,17 @@ public class ServiceCommunication {
 
     @Column(name = "message_channel")
     private String messageChannel;
+
+    // Additional details for better analysis
+    @Column(name = "endpoint_path")
+    private String endpointPath;
+
+    @Column(name = "is_load_balanced")
+    private Boolean isLoadBalanced;
+
+    @Column(name = "is_async")
+    private Boolean isAsync;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
 }

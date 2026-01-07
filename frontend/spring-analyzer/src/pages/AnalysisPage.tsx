@@ -1,20 +1,22 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, XCircle, Loader2 } from 'lucide-react';
-import { useAnalysis } from '../hooks/useAnalysis';
+import { useAnalysis, useMicroservices } from '../hooks';
 import { Button } from '../components';
 import { SummaryCards, ClassList, EndpointList, DependencyList } from '../components/analysis';
 import RelationshipList from '../components/analysis/RelationshipList';
 import { ClassDiagram } from '../components/analysis/ClassDiagram';
+import { MicroservicesPanel, MicroservicesArchitectureDiagram } from '../components/microservices';
 import ModuleSelector from '../components/ModuleSelector';
 import './AnalysisPage.css';
 
-type TabType = 'classes' | 'endpoints' | 'dependencies' | 'relationships' | 'diagram';
+type TabType = 'classes' | 'endpoints' | 'dependencies' | 'relationships' | 'diagram' | 'microservices';
 
 export function AnalysisPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { result, loading, error, analyze, fetchResult, exportJson, exportMarkdown } = useAnalysis();
+  const { result: microservicesResult, loading: microservicesLoading, error: microservicesError, fetchMicroservices } = useMicroservices();
   const [activeTab, setActiveTab] = useState<TabType>('classes');
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
 
@@ -25,6 +27,13 @@ export function AnalysisPage() {
       fetchResult(projectId);
     }
   }, [projectId, fetchResult]);
+
+  // Fetch microservices when analysis is complete and tab is selected
+  useEffect(() => {
+    if (projectId && result?.status === 'COMPLETED' && activeTab === 'microservices' && !microservicesResult && !microservicesLoading) {
+      fetchMicroservices(projectId).catch(console.error);
+    }
+  }, [projectId, result?.status, activeTab, microservicesResult, microservicesLoading, fetchMicroservices]);
 
   // Filter data by selected module
   const filteredClasses = useMemo(() => {
@@ -149,6 +158,12 @@ export function AnalysisPage() {
             >
               Diagram
             </button>
+            <button 
+              className={`tab ${activeTab === 'microservices' ? 'active' : ''}`}
+              onClick={() => setActiveTab('microservices')}
+            >
+              Microservices
+            </button>
           </div>
 
           <div className="tab-content">
@@ -157,6 +172,39 @@ export function AnalysisPage() {
             {activeTab === 'dependencies' && <DependencyList dependencies={filteredDependencies} />}
             {activeTab === 'relationships' && <RelationshipList relationships={result.relationships || []} />}
             {activeTab === 'diagram' && <ClassDiagram classes={filteredClasses} relationships={result.relationships || []} />}
+            {activeTab === 'microservices' && (
+              <div className="microservices-tab-content">
+                {microservicesLoading && (
+                  <div className="loading-state">
+                    <Loader2 size={32} className="spin" />
+                    <p>Loading microservices analysis...</p>
+                  </div>
+                )}
+                {microservicesError && (
+                  <div className="error-message">{microservicesError}</div>
+                )}
+                {microservicesResult && (
+                  <>
+                    <MicroservicesPanel data={microservicesResult} />
+                    <div className="microservices-diagram-section">
+                      <h3>Architecture Diagram</h3>
+                      <MicroservicesArchitectureDiagram 
+                        services={microservicesResult.services} 
+                        communications={microservicesResult.communications} 
+                      />
+                    </div>
+                  </>
+                )}
+                {!microservicesLoading && !microservicesError && !microservicesResult && (
+                  <div className="empty-state">
+                    <p>Click to load microservices analysis</p>
+                    <Button onClick={() => fetchMicroservices(projectId)}>
+                      Load Microservices
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </>
       )}

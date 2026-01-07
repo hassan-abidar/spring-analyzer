@@ -70,4 +70,42 @@ public class Microservice {
 
     @Column(columnDefinition = "TEXT")
     private String messagingType;
+
+    // Communication methods used by this service
+    @Column(name = "has_rest_template")
+    private Boolean hasRestTemplate;
+
+    @Column(name = "has_web_client")
+    private Boolean hasWebClient;
+
+    @Column(name = "has_kafka")
+    private Boolean hasKafka;
+
+    @Column(name = "has_rabbitmq")
+    private Boolean hasRabbitmq;
+
+    @Column(name = "has_grpc")
+    private Boolean hasGrpc;
+
+    // Service discovery details
+    @Column(name = "eureka_service_url")
+    private String eurekaServiceUrl;
+
+    @Column(name = "has_load_balancer")
+    private Boolean hasLoadBalancer;
+
+    @Column(name = "has_circuit_breaker")
+    private Boolean hasCircuitBreaker;
+
+    // Gateway routes (JSON format)
+    @Column(name = "gateway_routes", columnDefinition = "TEXT")
+    private String gatewayRoutes;
+
+    // Database info
+    @Column(name = "database_type")
+    private String databaseType;
+
+    // All detected communication methods as comma-separated
+    @Column(name = "communication_methods", columnDefinition = "TEXT")
+    private String communicationMethods;
 }

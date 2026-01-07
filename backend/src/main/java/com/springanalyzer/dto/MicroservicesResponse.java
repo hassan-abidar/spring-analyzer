@@ -25,7 +25,11 @@ public class MicroservicesResponse {
         private boolean hasServiceDiscovery;
         private boolean hasApiGateway;
         private boolean hasConfigServer;
+        private boolean hasLoadBalancing;
+        private boolean hasCircuitBreaker;
         private List<String> messagingTechnologies;
+        private List<String> communicationMethods;
+        private String eurekaServerUrl;
     }
 
     @Data
@@ -39,15 +43,32 @@ public class MicroservicesResponse {
         private String serverPort;
         private String serviceType;
         private List<String> profiles;
+        // Service Discovery
         private boolean hasEurekaClient;
         private boolean hasConfigClient;
         private boolean hasGateway;
+        private String eurekaServiceUrl;
+        // Communication Methods
         private boolean hasFeignClients;
+        private boolean hasRestTemplate;
+        private boolean hasWebClient;
+        private boolean hasKafka;
+        private boolean hasRabbitmq;
+        private boolean hasGrpc;
+        // Resilience
+        private boolean hasLoadBalancer;
+        private boolean hasCircuitBreaker;
+        // Stats
         private int classCount;
         private int endpointCount;
         private List<String> dependencies;
         private List<String> messagingTypes;
+        private List<String> communicationMethods;
         private List<String> consumedServices;
+        // Gateway specific
+        private List<String> gatewayRoutes;
+        // Database
+        private String databaseType;
     }
 
     @Data
@@ -63,5 +84,9 @@ public class MicroservicesResponse {
         private String className;
         private String methodName;
         private String messageChannel;
+        private String endpointPath;
+        private boolean isLoadBalanced;
+        private boolean isAsync;
+        private String description;
     }
 }

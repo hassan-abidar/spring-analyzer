@@ -1,0 +1,483 @@
+.microservices-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Summary Grid */
+.ms-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.ms-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem !important;
+}
+
+.ms-summary-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ms-summary-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.ms-summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ms-summary-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Features Card */
+.ms-features-card h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.ms-features-card h4 {
+  margin: 1rem 0 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.ms-features-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ms-feature-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.ms-feature-badge.enabled {
+  background-color: #10b98120;
+  color: #10b981;
+}
+
+.ms-feature-badge.disabled {
+  background-color: #64748b20;
+  color: #64748b;
+}
+
+.ms-feature-detail {
+  font-size: 0.75rem;
+  opacity: 0.8;
+  margin-left: 0.25rem;
+}
+
+.ms-comm-methods,
+.ms-messaging {
+  margin-top: 1rem;
+}
+
+.ms-methods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.ms-method-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: white;
+}
+
+/* Tabs */
+.ms-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.ms-tab {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.2s;
+}
+
+.ms-tab:hover {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.ms-tab.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Overview Tab */
+.ms-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ms-type-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.ms-type-breakdown h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.ms-breakdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ms-breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+}
+
+.ms-type-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.ms-type-name {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.ms-type-count {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Services List */
+.ms-services-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1rem;
+}
+
+.ms-service-card {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ms-service-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ms-service-card.selected {
+  border: 2px solid var(--primary-color);
+}
+
+.ms-service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.ms-service-type-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.ms-service-port {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.ms-service-name {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.ms-service-app-name {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.ms-service-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.ms-service-stats span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ms-service-comm {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.ms-service-comm-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.ms-service-comm-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.ms-comm-badge {
+  padding: 0.2rem 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.ms-service-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.ms-feature-mini {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  background-color: #3b82f620;
+  color: #3b82f6;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.ms-gateway-routes {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.ms-routes-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.ms-route-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  background-color: #10b98120;
+  color: #10b981;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: monospace;
+  margin-right: 0.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.ms-service-db {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.ms-service-details {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.ms-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.ms-detail-row span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.ms-detail-row code {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 4px;
+  word-break: break-all;
+}
+
+/* Communications List */
+.ms-communications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ms-comm-card {
+  padding: 1rem !important;
+}
+
+.ms-comm-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ms-comm-type-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.ms-comm-lb-badge,
+.ms-comm-async-badge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.ms-comm-lb-badge {
+  background-color: #6366f120;
+  color: #6366f1;
+}
+
+.ms-comm-async-badge {
+  background-color: #f5990b20;
+  color: #f59e0b;
+}
+
+.ms-comm-flow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.ms-comm-source,
+.ms-comm-target {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ms-comm-target {
+  font-family: monospace;
+  word-break: break-all;
+}
+
+.ms-comm-description {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.ms-comm-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.ms-comm-details > span {
+  padding: 0.2rem 0.5rem;
+  background-color: var(--bg-secondary);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+
+.ms-comm-method {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.ms-comm-path {
+  font-family: monospace;
+}
+
+.ms-comm-channel {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ms-comm-location {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.ms-comm-location code {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
