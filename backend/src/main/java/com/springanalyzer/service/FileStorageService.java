@@ -64,9 +64,9 @@ public class FileStorageService {
             throw new BadRequestException("Only ZIP files are allowed");
         }
         
-        long maxSize = 50 * 1024 * 1024; // 50MB
+        long maxSize = 500 * 1024 * 1024; // 500MB
         if (file.getSize() > maxSize) {
-            throw new BadRequestException("File size exceeds 50MB limit");
+            throw new BadRequestException("File size exceeds 500MB limit");
         }
     }
 

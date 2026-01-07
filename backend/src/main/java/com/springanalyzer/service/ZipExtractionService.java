@@ -82,6 +82,109 @@ public class ZipExtractionService {
         }
     }
 
+    /**
+     * Find all pom.xml files in the project (for multi-module projects)
+     */
+    public List<Path> findAllPomFiles(Path projectRoot) {
+        List<Path> pomFiles = new ArrayList<>();
+        try {
+            Files.walkFileTree(projectRoot, new SimpleFileVisitor<>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                    if (file.getFileName().toString().equals("pom.xml")) {
+                        pomFiles.add(file);
+                    }
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (IOException e) {
+            log.error("Error scanning for pom.xml files", e);
+        }
+        return pomFiles;
+    }
+
+    /**
+     * Find all modules (directories containing pom.xml or build.gradle)
+     */
+    public List<ModuleInfo> findModules(Path projectRoot) {
+        List<ModuleInfo> modules = new ArrayList<>();
+        
+        try {
+            // Check if root has pom.xml (could be parent pom or single module)
+            Path rootPom = projectRoot.resolve("pom.xml");
+            boolean isMultiModule = false;
+            
+            if (Files.exists(rootPom)) {
+                String content = Files.readString(rootPom);
+                isMultiModule = content.contains("<modules>") || content.contains("<module>");
+            }
+
+            // Find all pom.xml files
+            List<Path> pomFiles = findAllPomFiles(projectRoot);
+            
+            for (Path pomFile : pomFiles) {
+                Path moduleDir = pomFile.getParent();
+                String moduleName = moduleDir.equals(projectRoot) 
+                        ? "root" 
+                        : projectRoot.relativize(moduleDir).toString().replace("\\", "/");
+                
+                // Skip parent pom in multi-module projects
+                if (isMultiModule && moduleDir.equals(projectRoot)) {
+                    continue;
+                }
+                
+                // Check if this module has Java source files
+                Path srcMain = moduleDir.resolve("src/main/java");
+                if (Files.exists(srcMain) || !isMultiModule) {
+                    modules.add(new ModuleInfo(moduleName, moduleDir, pomFile));
+                }
+            }
+            
+            // If no modules found, treat as single module
+            if (modules.isEmpty()) {
+                modules.add(new ModuleInfo("main", projectRoot, rootPom.toFile().exists() ? rootPom : null));
+            }
+            
+        } catch (IOException e) {
+            log.error("Error finding modules", e);
+            modules.add(new ModuleInfo("main", projectRoot, null));
+        }
+        
+        return modules;
+    }
+
+    /**
+     * Determine which module a file belongs to
+     */
+    public String getModuleForFile(Path file, List<ModuleInfo> modules, Path projectRoot) {
+        String filePath = file.toAbsolutePath().toString().replace("\\", "/");
+        
+        // Find the most specific (longest path) module that contains this file
+        ModuleInfo bestMatch = null;
+        int bestMatchLength = -1;
+        
+        for (ModuleInfo module : modules) {
+            String modulePath = module.getPath().toAbsolutePath().toString().replace("\\", "/");
+            if (filePath.startsWith(modulePath) && modulePath.length() > bestMatchLength) {
+                bestMatch = module;
+                bestMatchLength = modulePath.length();
+            }
+        }
+        
+        return bestMatch != null ? bestMatch.getName() : "main";
+    }
+
+    /**
+     * Module information holder
+     */
+    @lombok.Data
+    @lombok.AllArgsConstructor
+    public static class ModuleInfo {
+        private String name;
+        private Path path;
+        private Path pomFile;
+    }
+
     public void cleanup(Path directory) {
         if (directory == null || !Files.exists(directory)) return;
         

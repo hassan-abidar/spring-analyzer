@@ -41,4 +41,7 @@ public class Endpoint {
 
     @Column(columnDefinition = "TEXT")
     private String parameters;
+
+    @Column(name = "module_name")
+    private String moduleName;
 }

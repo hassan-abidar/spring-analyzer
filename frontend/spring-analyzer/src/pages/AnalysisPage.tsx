@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, XCircle, Loader2 } from 'lucide-react';
 import { useAnalysis } from '../hooks/useAnalysis';
@@ -6,6 +6,7 @@ import { Button } from '../components';
 import { SummaryCards, ClassList, EndpointList, DependencyList } from '../components/analysis';
 import RelationshipList from '../components/analysis/RelationshipList';
 import { ClassDiagram } from '../components/analysis/ClassDiagram';
+import ModuleSelector from '../components/ModuleSelector';
 import './AnalysisPage.css';
 
 type TabType = 'classes' | 'endpoints' | 'dependencies' | 'relationships' | 'diagram';
@@ -15,6 +16,7 @@ export function AnalysisPage() {
   const navigate = useNavigate();
   const { result, loading, error, analyze, fetchResult, exportJson, exportMarkdown } = useAnalysis();
   const [activeTab, setActiveTab] = useState<TabType>('classes');
+  const [selectedModule, setSelectedModule] = useState<string | null>(null);
 
   const projectId = Number(id);
 
@@ -24,9 +26,33 @@ export function AnalysisPage() {
     }
   }, [projectId, fetchResult]);
 
+  // Filter data by selected module
+  const filteredClasses = useMemo(() => {
+    if (!result?.classes) return [];
+    if (!selectedModule) return result.classes;
+    return result.classes.filter(c => c.moduleName === selectedModule);
+  }, [result?.classes, selectedModule]);
+
+  const filteredEndpoints = useMemo(() => {
+    if (!result?.endpoints) return [];
+    if (!selectedModule) return result.endpoints;
+    return result.endpoints.filter(e => e.moduleName === selectedModule);
+  }, [result?.endpoints, selectedModule]);
+
+  const filteredDependencies = useMemo(() => {
+    if (!result?.dependencies) return [];
+    if (!selectedModule) return result.dependencies;
+    return result.dependencies.filter(d => d.moduleName === selectedModule);
+  }, [result?.dependencies, selectedModule]);
+
   const handleAnalyze = async () => {
     if (projectId) {
-      await analyze(projectId);
+      try {
+        await analyze(projectId);
+      } catch (err) {
+        // Error is already set in the hook, just catch to prevent unhandled rejection
+        console.error('Analysis failed:', err);
+      }
     }
   };
 
@@ -83,24 +109,33 @@ export function AnalysisPage() {
         <>
           <SummaryCards summary={result.summary} />
 
+          {result.isMultiModule && (
+            <ModuleSelector
+              modules={result.modules || []}
+              selectedModule={selectedModule}
+              onModuleChange={setSelectedModule}
+              moduleSummaries={result.moduleSummaries}
+            />
+          )}
+
           <div className="tabs">
             <button 
               className={`tab ${activeTab === 'classes' ? 'active' : ''}`}
               onClick={() => setActiveTab('classes')}
             >
-              Classes ({result.classes.length})
+              Classes ({filteredClasses.length})
             </button>
             <button 
               className={`tab ${activeTab === 'endpoints' ? 'active' : ''}`}
               onClick={() => setActiveTab('endpoints')}
             >
-              Endpoints ({result.endpoints.length})
+              Endpoints ({filteredEndpoints.length})
             </button>
             <button 
               className={`tab ${activeTab === 'dependencies' ? 'active' : ''}`}
               onClick={() => setActiveTab('dependencies')}
             >
-              Dependencies ({result.dependencies.length})
+              Dependencies ({filteredDependencies.length})
             </button>
             <button 
               className={`tab ${activeTab === 'relationships' ? 'active' : ''}`}
@@ -117,11 +152,11 @@ export function AnalysisPage() {
           </div>
 
           <div className="tab-content">
-            {activeTab === 'classes' && <ClassList classes={result.classes} />}
-            {activeTab === 'endpoints' && <EndpointList endpoints={result.endpoints} />}
-            {activeTab === 'dependencies' && <DependencyList dependencies={result.dependencies} />}
+            {activeTab === 'classes' && <ClassList classes={filteredClasses} />}
+            {activeTab === 'endpoints' && <EndpointList endpoints={filteredEndpoints} />}
+            {activeTab === 'dependencies' && <DependencyList dependencies={filteredDependencies} />}
             {activeTab === 'relationships' && <RelationshipList relationships={result.relationships || []} />}
-            {activeTab === 'diagram' && <ClassDiagram classes={result.classes} relationships={result.relationships || []} />}
+            {activeTab === 'diagram' && <ClassDiagram classes={filteredClasses} relationships={result.relationships || []} />}
           </div>
         </>
       )}

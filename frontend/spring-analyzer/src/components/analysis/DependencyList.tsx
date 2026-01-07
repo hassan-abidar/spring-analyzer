@@ -48,6 +48,7 @@ export function DependencyList({ dependencies }: DependencyListProps) {
             <div className="dep-meta">
               {dep.version && <span className="dep-version">{dep.version}</span>}
               <span className="dep-scope">{dep.scope}</span>
+              {dep.moduleName && <span className="module-badge">{dep.moduleName}</span>}
             </div>
           </div>
         ))}

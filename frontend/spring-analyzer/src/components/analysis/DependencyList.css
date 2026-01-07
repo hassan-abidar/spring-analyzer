@@ -83,3 +83,12 @@
   padding: 2px 6px;
   border-radius: 4px;
 }
+
+.dep-meta .module-badge {
+  font-size: 11px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+}

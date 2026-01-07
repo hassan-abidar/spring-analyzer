@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build output (we build inside Docker)
+build/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test files
+coverage/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Documentation
+*.md
+!README.md
+
+# Environment files (exclude local dev files, keep production)
+.env
+.env.local
+.env.development

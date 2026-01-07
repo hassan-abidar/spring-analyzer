@@ -23,6 +23,64 @@ Here are some screenshots of SpringAnalyzer in action:
 
 ## Getting Started
 
+### Option 1: Docker (Recommended)
+
+The easiest way to run SpringAnalyzer is using Docker Compose.
+
+#### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+#### Run with Docker
+
+1. Clone the repository and navigate to the project root.
+
+2. Create a `.env` file (optional, for custom configuration):
+   ```sh
+   cp .env.example .env
+   # Edit .env with your preferred settings
+   ```
+
+3. Build and start all services:
+   ```sh
+   docker-compose up --build
+   ```
+
+4. Access the application:
+   - **Frontend:** http://localhost
+   - **Backend API:** http://localhost:8080
+   - **Health Check:** http://localhost:8080/actuator/health
+
+5. Stop the services:
+   ```sh
+   docker-compose down
+   ```
+
+6. Stop and remove all data (including database):
+   ```sh
+   docker-compose down -v
+   ```
+
+#### Development with Docker
+
+For local development with hot-reload, use the dev compose file to run only the database:
+
+```sh
+# Start only PostgreSQL
+docker-compose -f docker-compose.dev.yml up -d
+
+# Run backend locally with prod profile
+cd backend
+./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
+
+# Run frontend locally (in another terminal)
+cd frontend/spring-analyzer
+npm install
+npm start
+```
+
+### Option 2: Manual Setup
+
 ### Backend
 1. Go to the `backend` folder.
 2. Run the backend with Maven:

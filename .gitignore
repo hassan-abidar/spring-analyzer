@@ -1,0 +1,31 @@
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend
+backend/target/
+backend/uploads/
+backend/extracts/
+*.jar
+*.war
+*.log
+
+# Frontend
+frontend/spring-analyzer/node_modules/
+frontend/spring-analyzer/build/
+frontend/spring-analyzer/.env.local
+frontend/spring-analyzer/.env.development.local
+
+# Docker
+docker-compose.override.yml

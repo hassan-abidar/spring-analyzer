@@ -12,7 +12,7 @@ interface FileUploadProps {
 export function FileUpload({ 
   onFileSelect, 
   accept = '.zip', 
-  maxSize = 50 * 1024 * 1024,
+  maxSize = 500 * 1024 * 1024, // 500MB limit
   disabled = false 
 }: FileUploadProps) {
   const [isDragging, setIsDragging] = useState(false);

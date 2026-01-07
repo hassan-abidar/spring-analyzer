@@ -13,7 +13,11 @@ public interface EndpointRepository extends JpaRepository<Endpoint, Long> {
     
     List<Endpoint> findByProjectIdAndHttpMethod(Long projectId, HttpMethod httpMethod);
     
+    List<Endpoint> findByProjectIdAndModuleName(Long projectId, String moduleName);
+    
     long countByProjectId(Long projectId);
+    
+    long countByProjectIdAndModuleName(Long projectId, String moduleName);
     
     void deleteByProjectId(Long projectId);
 }

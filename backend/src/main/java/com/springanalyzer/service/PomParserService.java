@@ -28,6 +28,10 @@ public class PomParserService {
     );
 
     public List<Dependency> parsePom(Path pomFile, Project project) {
+        return parsePom(pomFile, project, "main");
+    }
+
+    public List<Dependency> parsePom(Path pomFile, Project project, String moduleName) {
         List<Dependency> dependencies = new ArrayList<>();
         
         try {
@@ -41,6 +45,7 @@ public class PomParserService {
                         .artifactId(matcher.group(2).trim())
                         .version(matcher.group(3) != null ? matcher.group(3).trim() : null)
                         .scope(matcher.group(4) != null ? matcher.group(4).trim() : "compile")
+                        .moduleName(moduleName)
                         .build();
                 dependencies.add(dep);
             }

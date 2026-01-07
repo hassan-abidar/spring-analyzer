@@ -15,9 +15,9 @@ export function useAnalysis() {
       setResult(data);
       return data;
     } catch (err: any) {
-      const message = err.response?.data?.message || 'Analysis failed';
+      const message = err.response?.data?.message || err.response?.data?.error?.details || 'Analysis failed';
       setError(message);
-      throw new Error(message);
+      return null;
     } finally {
       setLoading(false);
     }

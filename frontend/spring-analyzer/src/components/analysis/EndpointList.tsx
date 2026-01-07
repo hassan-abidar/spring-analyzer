@@ -55,6 +55,7 @@ export function EndpointList({ endpoints }: EndpointListProps) {
           <span>Path</span>
           <span>Handler</span>
           <span>Return</span>
+          <span>Module</span>
         </div>
         {filtered.map((ep) => (
           <div key={ep.id} className="endpoint-row">
@@ -67,6 +68,9 @@ export function EndpointList({ endpoints }: EndpointListProps) {
               {ep.methodName}()
             </span>
             <span className="endpoint-return">{ep.returnType}</span>
+            <span className="endpoint-module">
+              {ep.moduleName && <span className="module-badge">{ep.moduleName}</span>}
+            </span>
           </div>
         ))}
       </div>

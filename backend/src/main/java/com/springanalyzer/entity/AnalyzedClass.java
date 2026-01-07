@@ -49,4 +49,7 @@ public class AnalyzedClass {
 
     @Column(name = "method_count")
     private Integer methodCount;
+
+    @Column(name = "module_name")
+    private String moduleName;
 }

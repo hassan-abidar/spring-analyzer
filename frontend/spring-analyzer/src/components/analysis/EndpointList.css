@@ -41,7 +41,7 @@
 
 .endpoint-header {
   display: grid;
-  grid-template-columns: 80px 1fr 1fr 120px;
+  grid-template-columns: 80px 1fr 1fr 120px 100px;
   gap: 12px;
   padding: 12px 16px;
   background: #f8fafc;
@@ -53,7 +53,7 @@
 
 .endpoint-row {
   display: grid;
-  grid-template-columns: 80px 1fr 1fr 120px;
+  grid-template-columns: 80px 1fr 1fr 120px 100px;
   gap: 12px;
   padding: 12px 16px;
   border-bottom: 1px solid #f1f5f9;
@@ -77,6 +77,15 @@
   font-family: monospace;
   font-size: 13px;
   color: #1e293b;
+}
+
+.endpoint-module .module-badge {
+  font-size: 11px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
 }
 
 .endpoint-handler {

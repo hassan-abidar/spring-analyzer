@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
             MaxUploadSizeExceededException ex, HttpServletRequest request) {
         log.warn("File too large");
         return buildErrorResponse("File size exceeds limit", "FILE_SIZE_EXCEEDED", 
-                "Maximum upload size is 50MB", request.getRequestURI(), HttpStatus.PAYLOAD_TOO_LARGE);
+                "Maximum upload size is 500MB", request.getRequestURI(), HttpStatus.PAYLOAD_TOO_LARGE);
     }
 
     @ExceptionHandler(SpringAnalyzerException.class)

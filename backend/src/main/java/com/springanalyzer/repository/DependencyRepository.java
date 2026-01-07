@@ -10,7 +10,11 @@ public interface DependencyRepository extends JpaRepository<Dependency, Long> {
     
     List<Dependency> findByProjectId(Long projectId);
     
+    List<Dependency> findByProjectIdAndModuleName(Long projectId, String moduleName);
+    
     long countByProjectId(Long projectId);
+    
+    long countByProjectIdAndModuleName(Long projectId, String moduleName);
     
     void deleteByProjectId(Long projectId);
 }

@@ -59,12 +59,20 @@ public class AnalysisService {
 
             clearPreviousAnalysis(projectId);
 
+            // Detect modules (for microservices/multi-module projects)
+            List<ZipExtractionService.ModuleInfo> modules = zipExtractionService.findModules(extractedPath);
+            log.info("Detected {} module(s) in project {}", modules.size(), project.getName());
+            for (ZipExtractionService.ModuleInfo module : modules) {
+                log.info("  - Module: {} at {}", module.getName(), module.getPath());
+            }
+
             List<Path> javaFiles = zipExtractionService.findJavaFiles(extractedPath);
             log.info("Found {} Java files in project {}", javaFiles.size(), project.getName());
 
             Map<String, AnalyzedClass> classMap = new HashMap<>();
             for (Path javaFile : javaFiles) {
-                AnalyzedClass saved = processJavaFile(javaFile, project);
+                String moduleName = zipExtractionService.getModuleForFile(javaFile, modules, extractedPath);
+                AnalyzedClass saved = processJavaFile(javaFile, project, moduleName);
                 if (saved != null) {
                     classMap.put(saved.getName(), saved);
                 }
@@ -83,11 +91,13 @@ public class AnalysisService {
             microserviceAnalyzerService.analyzeProject(project, extractedPath);
             log.info("Analyzed microservices architecture");
 
-            Path pomFile = zipExtractionService.findPomFile(extractedPath);
-            if (pomFile != null) {
-                List<Dependency> dependencies = pomParserService.parsePom(pomFile, project);
-                dependencyRepository.saveAll(dependencies);
-                log.info("Found {} dependencies", dependencies.size());
+            // Parse dependencies for all modules
+            for (ZipExtractionService.ModuleInfo module : modules) {
+                if (module.getPomFile() != null && java.nio.file.Files.exists(module.getPomFile())) {
+                    List<Dependency> dependencies = pomParserService.parsePom(module.getPomFile(), project, module.getName());
+                    dependencyRepository.saveAll(dependencies);
+                    log.info("Found {} dependencies in module {}", dependencies.size(), module.getName());
+                }
             }
 
             project.setStatus(ProjectStatus.COMPLETED);
@@ -107,7 +117,7 @@ public class AnalysisService {
         }
     }
 
-    private AnalyzedClass processJavaFile(Path file, Project project) {
+    private AnalyzedClass processJavaFile(Path file, Project project, String moduleName) {
         JavaParserService.ParsedClass parsed = javaParserService.parseJavaFile(file);
         if (parsed == null || parsed.getName() == null) return null;
 
@@ -122,6 +132,7 @@ public class AnalysisService {
                 .implementsInterfaces(String.join(",", parsed.getImplementsInterfaces()))
                 .fieldCount(parsed.getFieldCount())
                 .methodCount(parsed.getMethodCount())
+                .moduleName(moduleName)
                 .build();
 
         AnalyzedClass saved = classRepository.save(analyzedClass);
@@ -135,6 +146,7 @@ public class AnalysisService {
                     .methodName(pe.getMethodName())
                     .returnType(pe.getReturnType())
                     .parameters(pe.getParameters())
+                    .moduleName(moduleName)
                     .build();
             endpointRepository.save(endpoint);
         }

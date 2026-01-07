@@ -30,11 +30,29 @@ public class AnalysisResultService {
         List<Dependency> dependencies = dependencyRepository.findByProjectId(projectId);
         List<ClassRelationship> relationships = relationshipRepository.findByProject_Id(projectId);
 
+        // Get distinct module names
+        List<String> modules = classRepository.findDistinctModuleNamesByProjectId(projectId);
+        if (modules.isEmpty() || (modules.size() == 1 && modules.get(0) == null)) {
+            modules = List.of("main");
+        }
+        boolean isMultiModule = modules.size() > 1;
+
+        // Build module summaries
+        Map<String, ModuleSummary> moduleSummaries = new HashMap<>();
+        for (String moduleName : modules) {
+            if (moduleName != null) {
+                moduleSummaries.put(moduleName, buildModuleSummary(moduleName, classes, endpoints, dependencies));
+            }
+        }
+
         return AnalysisResponse.builder()
                 .projectId(project.getId())
                 .projectName(project.getName())
                 .status(project.getStatus().name())
-                .summary(buildSummary(classes, endpoints, dependencies, relationships))
+                .isMultiModule(isMultiModule)
+                .modules(modules)
+                .summary(buildSummary(classes, endpoints, dependencies, relationships, modules.size()))
+                .moduleSummaries(moduleSummaries)
                 .classes(classes.stream().map(this::toClassInfo).toList())
                 .endpoints(endpoints.stream().map(this::toEndpointInfo).toList())
                 .dependencies(dependencies.stream().map(this::toDependencyInfo).toList())
@@ -42,7 +60,32 @@ public class AnalysisResultService {
                 .build();
     }
 
-    private AnalysisSummary buildSummary(List<AnalyzedClass> classes, List<Endpoint> endpoints, List<Dependency> dependencies, List<ClassRelationship> relationships) {
+    private ModuleSummary buildModuleSummary(String moduleName, List<AnalyzedClass> allClasses, 
+            List<Endpoint> allEndpoints, List<Dependency> allDependencies) {
+        List<AnalyzedClass> moduleClasses = allClasses.stream()
+                .filter(c -> moduleName.equals(c.getModuleName()))
+                .toList();
+        List<Endpoint> moduleEndpoints = allEndpoints.stream()
+                .filter(e -> moduleName.equals(e.getModuleName()))
+                .toList();
+        List<Dependency> moduleDeps = allDependencies.stream()
+                .filter(d -> moduleName.equals(d.getModuleName()))
+                .toList();
+
+        return ModuleSummary.builder()
+                .moduleName(moduleName)
+                .totalClasses(moduleClasses.size())
+                .controllers(countByType(moduleClasses, ClassType.CONTROLLER) + countByType(moduleClasses, ClassType.REST_CONTROLLER))
+                .services(countByType(moduleClasses, ClassType.SERVICE))
+                .repositories(countByType(moduleClasses, ClassType.REPOSITORY))
+                .entities(countByType(moduleClasses, ClassType.ENTITY))
+                .endpoints(moduleEndpoints.size())
+                .dependencies(moduleDeps.size())
+                .build();
+    }
+
+    private AnalysisSummary buildSummary(List<AnalyzedClass> classes, List<Endpoint> endpoints, 
+            List<Dependency> dependencies, List<ClassRelationship> relationships, int moduleCount) {
         Map<String, Long> classTypeBreakdown = classes.stream()
                 .collect(Collectors.groupingBy(c -> c.getType().name(), Collectors.counting()));
 
@@ -61,6 +104,7 @@ public class AnalysisResultService {
                 .endpoints(endpoints.size())
                 .dependencies(dependencies.size())
                 .relationships(relationships.size())
+                .moduleCount(moduleCount)
                 .classTypeBreakdown(classTypeBreakdown)
                 .httpMethodBreakdown(httpMethodBreakdown)
                 .relationshipTypeBreakdown(relationshipTypeBreakdown)
@@ -82,6 +126,7 @@ public class AnalysisResultService {
                 .implementsInterfaces(c.getImplementsInterfaces() != null ? Arrays.asList(c.getImplementsInterfaces().split(",")) : List.of())
                 .fieldCount(c.getFieldCount() != null ? c.getFieldCount() : 0)
                 .methodCount(c.getMethodCount() != null ? c.getMethodCount() : 0)
+                .moduleName(c.getModuleName())
                 .build();
     }
 
@@ -93,6 +138,7 @@ public class AnalysisResultService {
                 .methodName(e.getMethodName())
                 .returnType(e.getReturnType())
                 .className(e.getAnalyzedClass() != null ? e.getAnalyzedClass().getName() : null)
+                .moduleName(e.getModuleName())
                 .build();
     }
 
@@ -103,6 +149,7 @@ public class AnalysisResultService {
                 .artifactId(d.getArtifactId())
                 .version(d.getVersion())
                 .scope(d.getScope())
+                .moduleName(d.getModuleName())
                 .build();
     }
 

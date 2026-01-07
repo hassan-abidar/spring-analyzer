@@ -11,11 +11,14 @@ public class AnalysisResponse {
     private Long projectId;
     private String projectName;
     private String status;
+    private boolean isMultiModule;
+    private List<String> modules;
     private AnalysisSummary summary;
     private List<ClassInfo> classes;
     private List<EndpointInfo> endpoints;
     private List<DependencyInfo> dependencies;
     private List<RelationshipInfo> relationships;
+    private Map<String, ModuleSummary> moduleSummaries;
 
     @Data
     @Builder
@@ -28,9 +31,23 @@ public class AnalysisResponse {
         private long endpoints;
         private long dependencies;
         private long relationships;
+        private int moduleCount;
         private Map<String, Long> classTypeBreakdown;
         private Map<String, Long> httpMethodBreakdown;
         private Map<String, Long> relationshipTypeBreakdown;
+    }
+
+    @Data
+    @Builder
+    public static class ModuleSummary {
+        private String moduleName;
+        private long totalClasses;
+        private long controllers;
+        private long services;
+        private long repositories;
+        private long entities;
+        private long endpoints;
+        private long dependencies;
     }
 
     @Data
@@ -45,6 +62,7 @@ public class AnalysisResponse {
         private List<String> implementsInterfaces;
         private int fieldCount;
         private int methodCount;
+        private String moduleName;
     }
 
     @Data
@@ -56,6 +74,7 @@ public class AnalysisResponse {
         private String methodName;
         private String returnType;
         private String className;
+        private String moduleName;
     }
 
     @Data
@@ -66,6 +85,7 @@ public class AnalysisResponse {
         private String artifactId;
         private String version;
         private String scope;
+        private String moduleName;
     }
 
     @Data

@@ -2,7 +2,10 @@ export interface AnalysisResult {
   projectId: number;
   projectName: string;
   status: string;
+  isMultiModule: boolean;
+  modules: string[];
   summary: AnalysisSummary;
+  moduleSummaries: Record<string, ModuleSummary>;
   classes: ClassInfo[];
   endpoints: EndpointInfo[];
   dependencies: DependencyInfo[];
@@ -18,9 +21,21 @@ export interface AnalysisSummary {
   endpoints: number;
   dependencies: number;
   relationships: number;
+  moduleCount: number;
   classTypeBreakdown: Record<string, number>;
   httpMethodBreakdown: Record<string, number>;
   relationshipBreakdown: Record<string, number>;
+}
+
+export interface ModuleSummary {
+  moduleName: string;
+  totalClasses: number;
+  controllers: number;
+  services: number;
+  repositories: number;
+  entities: number;
+  endpoints: number;
+  dependencies: number;
 }
 
 export interface RelationshipInfo {
@@ -41,6 +56,7 @@ export interface ClassInfo {
   implementsInterfaces: string[];
   fieldCount: number;
   methodCount: number;
+  moduleName?: string;
 }
 
 export interface EndpointInfo {
@@ -50,6 +66,7 @@ export interface EndpointInfo {
   methodName: string;
   returnType: string;
   className?: string;
+  moduleName?: string;
 }
 
 export interface DependencyInfo {
@@ -58,4 +75,5 @@ export interface DependencyInfo {
   artifactId: string;
   version?: string;
   scope: string;
+  moduleName?: string;
 }

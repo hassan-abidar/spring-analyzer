@@ -1,0 +1,32 @@
+# Build outputs
+target/
+!target/*.jar
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Logs
+*.log
+logs/
+
+# Test files
+src/test/
+
+# Documentation
+*.md
+!README.md
+
+# Local configuration
+application-local.properties
+
+# Extracted/uploaded files (handled by volumes)
+uploads/
+extracts/

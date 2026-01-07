@@ -31,4 +31,7 @@ public class Dependency {
     private String version;
 
     private String scope;
+
+    @Column(name = "module_name")
+    private String moduleName;
 }

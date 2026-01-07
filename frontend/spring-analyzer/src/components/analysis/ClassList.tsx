@@ -79,6 +79,11 @@ export function ClassList({ classes }: ClassListProps) {
                 {cls.annotations.length > 3 && <span className="more">+{cls.annotations.length - 3}</span>}
               </div>
             )}
+            {cls.moduleName && (
+              <div className="class-module">
+                <span className="module-badge">{cls.moduleName}</span>
+              </div>
+            )}
           </div>
         ))}
       </div>
