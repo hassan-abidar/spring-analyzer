@@ -7,7 +7,7 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 300000, // 5 minutes for large microservices projects
 });
 
 apiClient.interceptors.request.use(
