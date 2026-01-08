@@ -230,3 +230,10 @@
   font-weight: 600;
   color: #1e293b;
 }
+
+/* Data Flow Tab Styles */
+.dataflow-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

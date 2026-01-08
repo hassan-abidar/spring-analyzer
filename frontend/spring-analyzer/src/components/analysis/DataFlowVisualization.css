@@ -1,0 +1,143 @@
+.dataflow-visualization {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dataflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.dataflow-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dataflow-info {
+  display: flex;
+  gap: 16px;
+}
+
+.dataflow-stat {
+  font-size: 13px;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dataflow-container {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.dataflow-container canvas {
+  display: block;
+  width: 100%;
+  background: white;
+}
+
+.dataflow-node-details {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.dataflow-node-details h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.dataflow-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.dataflow-details p {
+  margin: 0;
+  font-size: 13px;
+  color: #475569;
+}
+
+.dataflow-details strong {
+  color: #1e293b;
+}
+
+.dataflow-details code {
+  background: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #dc2626;
+}
+
+.dataflow-type-badge {
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dataflow-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.dataflow-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dataflow-legend-item:hover {
+  color: #1e293b;
+}
+
+.dataflow-legend-color {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .dataflow-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dataflow-info {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+
+  .dataflow-details {
+    grid-template-columns: 1fr;
+  }
+}

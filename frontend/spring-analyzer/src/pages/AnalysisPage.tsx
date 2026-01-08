@@ -1,22 +1,23 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, XCircle, Loader2 } from 'lucide-react';
-import { useAnalysis, useMicroservices } from '../hooks';
+import { useAnalysis, useMicroservices, useDataFlow } from '../hooks';
 import { Button } from '../components';
-import { SummaryCards, ClassList, EndpointList, DependencyList } from '../components/analysis';
+import { SummaryCards, ClassList, EndpointList, DependencyList, DataFlowVisualization } from '../components/analysis';
 import RelationshipList from '../components/analysis/RelationshipList';
 import { ClassDiagram } from '../components/analysis/ClassDiagram';
 import { MicroservicesPanel, MicroservicesArchitectureDiagram } from '../components/microservices';
 import ModuleSelector from '../components/ModuleSelector';
 import './AnalysisPage.css';
 
-type TabType = 'classes' | 'endpoints' | 'dependencies' | 'relationships' | 'diagram' | 'microservices';
+type TabType = 'classes' | 'endpoints' | 'dependencies' | 'relationships' | 'diagram' | 'microservices' | 'dataflow';
 
 export function AnalysisPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { result, loading, error, analyze, fetchResult, exportJson, exportMarkdown } = useAnalysis();
   const { result: microservicesResult, loading: microservicesLoading, error: microservicesError, fetchMicroservices } = useMicroservices();
+  const { result: dataFlowResult, loading: dataFlowLoading, error: dataFlowError, fetchDataFlow } = useDataFlow();
   const [activeTab, setActiveTab] = useState<TabType>('classes');
   const [selectedModule, setSelectedModule] = useState<string | null>(null);
 
@@ -34,6 +35,13 @@ export function AnalysisPage() {
       fetchMicroservices(projectId).catch(console.error);
     }
   }, [projectId, result?.status, activeTab, microservicesResult, microservicesLoading, fetchMicroservices]);
+
+  // Fetch data flow when analysis is complete and tab is selected
+  useEffect(() => {
+    if (projectId && result?.status === 'COMPLETED' && activeTab === 'dataflow' && !dataFlowResult && !dataFlowLoading) {
+      fetchDataFlow(projectId).catch(console.error);
+    }
+  }, [projectId, result?.status, activeTab, dataFlowResult, dataFlowLoading, fetchDataFlow]);
 
   // Filter data by selected module
   const filteredClasses = useMemo(() => {
@@ -164,6 +172,12 @@ export function AnalysisPage() {
             >
               Microservices
             </button>
+            <button 
+              className={`tab ${activeTab === 'dataflow' ? 'active' : ''}`}
+              onClick={() => setActiveTab('dataflow')}
+            >
+              Data Flow
+            </button>
           </div>
 
           <div className="tab-content">
@@ -200,6 +214,30 @@ export function AnalysisPage() {
                     <p>Click to load microservices analysis</p>
                     <Button onClick={() => fetchMicroservices(projectId)}>
                       Load Microservices
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+            {activeTab === 'dataflow' && (
+              <div className="dataflow-tab-content">
+                {dataFlowLoading && (
+                  <div className="loading-state">
+                    <Loader2 size={32} className="spin" />
+                    <p>Analyzing data flow...</p>
+                  </div>
+                )}
+                {dataFlowError && (
+                  <div className="error-message">{dataFlowError}</div>
+                )}
+                {dataFlowResult && (
+                  <DataFlowVisualization data={dataFlowResult} />
+                )}
+                {!dataFlowLoading && !dataFlowError && !dataFlowResult && (
+                  <div className="empty-state">
+                    <p>Click to load data flow analysis</p>
+                    <Button onClick={() => fetchDataFlow(projectId)}>
+                      Load Data Flow
                     </Button>
                   </div>
                 )}
